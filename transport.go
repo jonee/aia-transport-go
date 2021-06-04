@@ -25,20 +25,28 @@ func NewTransport() (*http.Transport, error) {
 		return nil, err
 	}
 
+	return NewTransportWithCustomTLSClientConfig(&tls.Config{RootCAs: rootCAs})
+}
+
+// Allow custom TLSClientConfig parameter which could have custom RootCAs
+func NewTransportWithCustomTLSClientConfig(TLSClientConfig *tls.Config) (*http.Transport, error) {
+	// Support windows.
+	if runtime.GOOS == "windows" {
+		return &http.Transport{TLSClientConfig: TLSClientConfig}, nil
+	}
+
 	return &http.Transport{
-		TLSClientConfig: &tls.Config{
-			RootCAs: rootCAs,
-		},
+		TLSClientConfig: TLSClientConfig,
 		DialTLS: func(network, addr string) (net.Conn, error) {
 			conn, err := tls.Dial(network, addr, &tls.Config{
 				InsecureSkipVerify: true,
-				RootCAs:            rootCAs,
+				RootCAs:            TLSClientConfig.RootCAs,
 				VerifyPeerCertificate: func(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
 					serverName, _, err := net.SplitHostPort(addr)
 					if err != nil {
 						return err
 					}
-					return verifyPeerCerts(rootCAs, serverName, rawCerts)
+					return VerifyPeerCerts(TLSClientConfig.RootCAs, serverName, rawCerts)
 				},
 			})
 			if err != nil {
@@ -47,9 +55,10 @@ func NewTransport() (*http.Transport, error) {
 			return conn, nil
 		},
 	}, nil
+
 }
 
-func verifyPeerCerts(rootCAs *x509.CertPool, serverName string, rawCerts [][]byte) error {
+func VerifyPeerCerts(rootCAs *x509.CertPool, serverName string, rawCerts [][]byte) error {
 	certs := make([]*x509.Certificate, len(rawCerts))
 	for i, asn1Data := range rawCerts {
 		cert, err := x509.ParseCertificate(asn1Data)
@@ -73,7 +82,7 @@ func verifyPeerCerts(rootCAs *x509.CertPool, serverName string, rawCerts [][]byt
 	if err != nil {
 		if _, ok := err.(x509.UnknownAuthorityError); ok {
 			if len(certs[0].IssuingCertificateURL) >= 1 && certs[0].IssuingCertificateURL[0] != "" {
-				return verifyIncompleteChain(certs[0].IssuingCertificateURL[0], certs[0], opts)
+				return VerifyIncompleteChain(certs[0].IssuingCertificateURL[0], certs[0], opts)
 			}
 		}
 		return err
@@ -81,8 +90,8 @@ func verifyPeerCerts(rootCAs *x509.CertPool, serverName string, rawCerts [][]byt
 	return nil
 }
 
-func verifyIncompleteChain(issuingCertificateURL string, baseCert *x509.Certificate, opts *x509.VerifyOptions) error {
-	issuer, err := getCert(issuingCertificateURL)
+func VerifyIncompleteChain(issuingCertificateURL string, baseCert *x509.Certificate, opts *x509.VerifyOptions) error {
+	issuer, err := GetCert(issuingCertificateURL)
 	if err != nil {
 		return err
 	}
@@ -91,7 +100,7 @@ func verifyIncompleteChain(issuingCertificateURL string, baseCert *x509.Certific
 	if err != nil {
 		if _, ok := err.(x509.UnknownAuthorityError); ok {
 			if len(issuer.IssuingCertificateURL) >= 1 && issuer.IssuingCertificateURL[0] != "" {
-				return verifyIncompleteChain(issuer.IssuingCertificateURL[0], baseCert, opts)
+				return VerifyIncompleteChain(issuer.IssuingCertificateURL[0], baseCert, opts)
 			}
 		}
 		return err
@@ -99,7 +108,7 @@ func verifyIncompleteChain(issuingCertificateURL string, baseCert *x509.Certific
 	return nil
 }
 
-func getCert(url string) (*x509.Certificate, error) {
+func GetCert(url string) (*x509.Certificate, error) {
 	resp, err := http.Get(url)
 	if resp != nil {
 		defer resp.Body.Close()
