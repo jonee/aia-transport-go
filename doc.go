@@ -19,4 +19,4 @@
 //     log.Fatal(err)
 //   }
 //   fmt.Println(res.Status)
-package aia //import "github.com/fcjr/aia-transport-go"
+package aia //import "github.com/jonee/aia-transport-go"

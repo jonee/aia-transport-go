@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/fcjr/aia-transport-go"
+	"github.com/jonee/aia-transport-go"
 )
 
 func TestTransport(t *testing.T) {

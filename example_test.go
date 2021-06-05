@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/fcjr/aia-transport-go"
+	"github.com/jonee/aia-transport-go"
 )
 
 func ExampleNewTransport() {

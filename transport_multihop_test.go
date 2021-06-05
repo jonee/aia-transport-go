@@ -21,7 +21,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fcjr/aia-transport-go"
+	"github.com/jonee/aia-transport-go"
 )
 
 func TestTransport_multiHopSemicompleteChainEnd(t *testing.T) {

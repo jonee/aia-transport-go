@@ -6,7 +6,7 @@ AIA-Transport-Go provides an http.Transport which uses the AIA (Authority Inform
 ## Installation
 
 
-`go get github.com/fcjr/aia-transport-go`
+`go get github.com/jonee/aia-transport-go`
 
 
 ## Usage
@@ -44,12 +44,12 @@ This library relies on [x509.SystemCertPool()](https://golang.org/pkg/crypto/x50
 [^1]: https://github.com/golang/go/issues/31773#issuecomment-582176197
 
 [doc-img]: https://img.shields.io/static/v1?label=godoc&message=reference&color=blue
-[doc]: https://pkg.go.dev/github.com/fcjr/aia-transport-go?tab=doc
-[ci-img]: https://travis-ci.org/fcjr/aia-transport-go.svg?branch=master
-[ci]: https://travis-ci.org/fcjr/aia-transport-go
-[report-card-img]: https://goreportcard.com/badge/github.com/fcjr/aia-transport-go
-[report-card]: https://goreportcard.com/report/github.com/fcjr/aia-transport-go
-[golangci-lint-img]: https://github.com/fcjr/aia-transport-go/workflows/golangci-lint/badge.svg
-[golangci-lint]: https://github.com/fcjr/aia-transport-go/actions?query=workflow%3Agolangci-lint
-[cov-img]: https://codecov.io/gh/fcjr/aia-transport-go/branch/master/graph/badge.svg
-[cov]: https://codecov.io/gh/fcjr/aia-transport-go
+[doc]: https://pkg.go.dev/github.com/jonee/aia-transport-go?tab=doc
+[ci-img]: https://travis-ci.org/jonee/aia-transport-go.svg?branch=master
+[ci]: https://travis-ci.org/jonee/aia-transport-go
+[report-card-img]: https://goreportcard.com/badge/github.com/jonee/aia-transport-go
+[report-card]: https://goreportcard.com/report/github.com/jonee/aia-transport-go
+[golangci-lint-img]: https://github.com/jonee/aia-transport-go/workflows/golangci-lint/badge.svg
+[golangci-lint]: https://github.com/jonee/aia-transport-go/actions?query=workflow%3Agolangci-lint
+[cov-img]: https://codecov.io/gh/jonee/aia-transport-go/branch/master/graph/badge.svg
+[cov]: https://codecov.io/gh/jonee/aia-transport-go
