@@ -3,10 +3,12 @@ package aia
 import (
 	"crypto/tls"
 	"crypto/x509"
-	"errors"
 	"io/ioutil"
-	"net"
 	"net/http"
+	
+	"errors"
+	"log"
+	"net"
 	"runtime"
 	"time"
 )
@@ -84,6 +86,7 @@ func VerifyPeerCerts(rootCAs *x509.CertPool, serverName string, rawCerts [][]byt
 			if len(certs[0].IssuingCertificateURL) >= 1 && certs[0].IssuingCertificateURL[0] != "" {
 				err1 := VerifyIncompleteChain(certs[0].IssuingCertificateURL[0], certs[0], opts)
 				if err1 != nil {
+					log.Println(err1)
 					return err // return original x509.UnknownAuthorityError
 				} 
 				return nil
